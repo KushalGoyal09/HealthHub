@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Doctor" ADD COLUMN     "wallet" INTEGER NOT NULL DEFAULT 0;

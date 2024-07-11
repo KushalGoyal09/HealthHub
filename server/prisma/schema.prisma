@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  Patient   Patient?
+  Doctor    Doctor?
+}
+
+model Patient {
+  id             Int           @id @default(autoincrement())
+  userId         String        @unique
+  user           User          @relation(fields: [userId], references: [id])
+  dateOfBirth    DateTime      @db.Date
+  medicalHistory String        @default("")
+  appointments   Appointment[]
+  Order          Order[]
+}
+
+model Doctor {
+  id             Int           @id @default(autoincrement())
+  userId         String        @unique
+  user           User          @relation(fields: [userId], references: [id])
+  specialty      String
+  education      String
+  experience     Int           @default(0)
+  fees           Int
+  wallet         Int           @default(0)
+  preferedTimeId Int           @unique
+  preferedTime   PreferedTime  @relation(fields: [preferedTimeId], references: [id])
+  appointments   Appointment[]
+  Order          Order[]
+}
+
+model PreferedTime {
+  id        Int      @id @default(autoincrement())
+  startTime DateTime @db.Time()
+  endTime   DateTime @db.Time()
+  duration  Int      @default(30)
+  Doctor    Doctor?
+}
+
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  slotId    Int               @unique
+  slot      Slot              @relation(fields: [slotId], references: [id])
+  reason    String?
+  status    AppointmentStatus @default(SCHEDULED)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+}
+
+model Slot {
+  id          Int          @id @default(autoincrement())
+  startTime   DateTime
+  endTime     DateTime
+  duration    Int
+  appointment Appointment?
+}
+
+model Order {
+  id        String      @id
+  patientId Int
+  doctorId  Int
+  patient   Patient     @relation(fields: [patientId], references: [id])
+  doctor    Doctor      @relation(fields: [doctorId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  bookTime  DateTime
+  endTime   DateTime
+  duration  Int
+  reason    String      @default("General")
+  amount    Float
+  status    OrderStatus @default(PENDING)
+}
+
+enum Role {
+  ADMIN
+  DOCTOR
+  PATIENT
+  USER
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
