@@ -98,4 +98,4 @@ Ensure you have the following installed:
     ```
 4. Open your browser and navigate to `http://localhost:5176`.
 
-Made with ❤️ by [Kushal Goyal](https://kushalgoyal.tech)
+
