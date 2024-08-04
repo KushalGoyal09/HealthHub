@@ -15,7 +15,8 @@ import paymentRouter from "./routers/handlePayment";
 import bookAppointmentRouter from "./routers/bookAppointment";
 import Secret from "./utils/secrets";
 import doctorDashboardRouter from "./routers/doctorDashboard";
-import patientDashboardRouter from "./routers/patentDashboard";
+import patientDashboardRouter from "./routers/patientDashboard";
+import chatRouter from "./routers/chat";
 dotenv.config();
 const app = express();
 const port = Secret.PORT
@@ -38,6 +39,7 @@ app.use('/api/pay', paymentRouter);
 app.use('/api/book', bookAppointmentRouter);
 app.use('/api/doctor-dashboard', doctorDashboardRouter);
 app.use('/api/patient-dashboard', patientDashboardRouter);
+app.use('/api/chat', chatRouter);
 
 app.use(notFound);
 app.use(errorHandler);

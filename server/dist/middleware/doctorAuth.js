@@ -19,25 +19,20 @@ const doctorAuthMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 
         (0, customError_1.throwUnauthorizedError)("Unauthorized");
         return;
     }
-    try {
-        const doctor = yield db.doctor.findUnique({
-            where: {
-                userId: userId
-            },
-            select: {
-                id: true
-            }
-        });
-        if (!doctor) {
-            (0, customError_1.throwUnauthorizedError)("Not registered as doctor");
-            return;
-        }
-        req.role = auth_1.Role.Doctor;
-        req.id = doctor.id;
-        next();
+    const doctor = yield db.doctor.findUnique({
+        where: {
+            userId: userId,
+        },
+        select: {
+            id: true,
+        },
+    });
+    if (!doctor) {
+        (0, customError_1.throwUnauthorizedError)("Not registered as doctor");
+        return;
     }
-    catch (error) {
-        (0, customError_1.throwInternalServerError)();
-    }
+    req.role = auth_1.Role.Doctor;
+    req.id = doctor.id;
+    next();
 });
 exports.default = doctorAuthMiddleware;

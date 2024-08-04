@@ -21,10 +21,10 @@ interface RegisterDoctorResponse {
 }
 
 const RegisterDoctor = () => {
-    const [error,setError] = useState("");
-    const [message,setMessage] = useState("");
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
     const token = useRecoilValue(tokenAtom);
-    const [user,setUser] = useRecoilState(userAtom);
+    const [user, setUser] = useRecoilState(userAtom);
     const { handleSubmit, register } = useForm<IRegisterDoctorInput>();
 
     const registerAsDoctor: SubmitHandler<IRegisterDoctorInput> = async (
@@ -32,7 +32,7 @@ const RegisterDoctor = () => {
     ) => {
         setError("");
         setMessage("");
-        if(!user) {
+        if (!user) {
             setError("You need to login First");
             return;
         }
@@ -41,23 +41,21 @@ const RegisterDoctor = () => {
                 RegisterDoctorResponse,
                 AxiosResponse<RegisterDoctorResponse>,
                 IRegisterDoctorInput
-            >(
-                "api/register-doctor",
-                data,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            >("api/register-doctor", data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setMessage(response.message);
-            user.doctorId = response.id;
-            user.role = 'DOCTOR';
-            setUser(user);
+            setUser({
+                ...user,
+                doctorId: response.id,
+                role: "DOCTOR",
+            });
         } catch (error) {
             console.log(error);
-            if(axios.isAxiosError(error)) {
-                if(error.response?.data.message) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data.message) {
                     setError(error.response.data.message);
                 } else {
                     setError("Somthing is wrong");
@@ -81,7 +79,7 @@ const RegisterDoctor = () => {
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
                             <label htmlFor="specialty" className="sr-only">
-                            Specialty
+                                Specialty
                             </label>
                             <input
                                 id="specialty"

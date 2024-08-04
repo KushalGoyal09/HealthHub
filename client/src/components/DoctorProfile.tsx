@@ -2,7 +2,10 @@ import { tokenAtom } from "@/recoil/authAtom";
 import axios, { AxiosResponse, isAxiosError } from "axios";
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { toast } from "./ui/use-toast";
+import ErrorComponent from "./Error";
 
 interface IInputs {
     specialty: string;
@@ -34,10 +37,6 @@ interface DoctorProfileEditResponse {
 
 type DoctorProfileEditRequest = Doctor;
 
-interface IDoctorProfile {
-    doctor: Doctor;
-}
-
 const convertTimeToDate = (timeString: string) => {
     const [hours, minutes] = timeString.split(":").map(Number);
     const date = new Date();
@@ -49,6 +48,7 @@ const convertTimeToDate = (timeString: string) => {
 };
 
 const formatTime = (date: Date) => {
+    date = new Date(date);
     let hours: string | number = date.getHours();
     let minutes: string | number = date.getMinutes();
     hours = hours < 10 ? "0" + hours : hours;
@@ -56,11 +56,17 @@ const formatTime = (date: Date) => {
     return `${hours}:${minutes}`;
 };
 
-const DoctorProfile: React.FC<IDoctorProfile> = ({ doctor }) => {
+const DoctorProfile: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState<null | string>(null);
     const [success, setSuccess] = useState<null | string>(null);
     const token = useRecoilValue(tokenAtom);
+    const [doctor, setDoctor] = useState<null | Doctor>(
+        useLoaderData() as Doctor
+    );
+    if (doctor === null) {
+        return <ErrorComponent />;
+    }
 
     const { register, handleSubmit } = useForm<IInputs>({
         defaultValues: {
@@ -84,22 +90,26 @@ const DoctorProfile: React.FC<IDoctorProfile> = ({ doctor }) => {
                 DoctorProfileEditResponse,
                 AxiosResponse<DoctorProfileEditResponse>,
                 DoctorProfileEditRequest
-            >("/api/doctor-dashboard/edit-profile", {
-                specialty: data.specialty,
-                education: data.education,
-                experience: data.experience,
-                fees: data.fees,
-                preferedTime: {
-                    startTime: convertTimeToDate(data.preferedStartTime),
-                    endTime: convertTimeToDate(data.preferedEndTime),
-                    duration: data.duration,
+            >(
+                "/api/doctor-dashboard/edit-profile",
+                {
+                    specialty: data.specialty,
+                    education: data.education,
+                    experience: data.experience,
+                    fees: data.fees,
+                    preferedTime: {
+                        startTime: convertTimeToDate(data.preferedStartTime),
+                        endTime: convertTimeToDate(data.preferedEndTime),
+                        duration: data.duration,
+                    },
                 },
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
-            });
-            doctor = res.profile;
+            );
+            setDoctor(res.profile);
             setIsEditing(false);
             setSuccess("Profile updated successfully");
         } catch (error) {
@@ -208,9 +218,13 @@ const DoctorProfile: React.FC<IDoctorProfile> = ({ doctor }) => {
                             </div>
                         ) : (
                             <p className="bg-gray-200 p-2 rounded">
-                                {doctor.preferedTime.startTime.toLocaleTimeString()}{" "}
+                                {new Date(
+                                    doctor.preferedTime.startTime
+                                ).toLocaleTimeString()}{" "}
                                 -{" "}
-                                {doctor.preferedTime.endTime.toLocaleTimeString()}
+                                {new Date(
+                                    doctor.preferedTime.endTime
+                                ).toLocaleTimeString()}
                             </p>
                         )}
                     </div>
@@ -274,3 +288,40 @@ const DoctorProfile: React.FC<IDoctorProfile> = ({ doctor }) => {
 };
 
 export default DoctorProfile;
+
+interface DoctorProfileResponse {
+    success: boolean;
+    message: string;
+    doctor: Doctor;
+}
+
+export const doctorProfileLoader: LoaderFunction = async () => {
+    const token = localStorage.getItem("token");
+    try {
+        const { data } = await axios.get<DoctorProfileResponse>(
+            "/api/doctor-dashboard/profile",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return data.doctor;
+    } catch (error) {
+        console.log(error);
+        if (isAxiosError(error)) {
+            if (error.response?.data) {
+                toast({
+                    title: error.response.data.message,
+                    variant: "destructive",
+                });
+            } else {
+                toast({
+                    title: "Somthing is wrong",
+                    variant: "destructive",
+                });
+            }
+        }
+        return null;
+    }
+};

@@ -42,9 +42,11 @@ const RegisterPatient = () => {
                 },
             });
             setMessage(response.message);
-            user.patientId = response.id;
-            user.role = "PATIENT";
-            setUser(user);
+            setUser({
+                ...user,
+                patientId: response.id,
+                role: "PATIENT"
+            });
         } catch (error) {
             console.log(error);
             if(axios.isAxiosError(error)) {

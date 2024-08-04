@@ -21,6 +21,7 @@ const bookAppointment_1 = __importDefault(require("./routers/bookAppointment"));
 const secrets_1 = __importDefault(require("./utils/secrets"));
 const doctorDashboard_1 = __importDefault(require("./routers/doctorDashboard"));
 const patentDashboard_1 = __importDefault(require("./routers/patentDashboard"));
+const chat_1 = __importDefault(require("./routers/chat"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = secrets_1.default.PORT;
@@ -40,6 +41,7 @@ app.use('/api/pay', handlePayment_1.default);
 app.use('/api/book', bookAppointment_1.default);
 app.use('/api/doctor-dashboard', doctorDashboard_1.default);
 app.use('/api/patient-dashboard', patentDashboard_1.default);
+app.use('/api/chat', chat_1.default);
 app.use(notFound_1.default);
 app.use(errorHandler_1.default);
 app.listen(port, () => {

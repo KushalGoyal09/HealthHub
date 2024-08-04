@@ -11,7 +11,7 @@ export const tokenAtom = atom({
     }),
 });
 
-interface User {
+export interface User {
     name: string;
     email: string;
     role: "ADMIN" | "DOCTOR" | "PATIENT" | "USER";

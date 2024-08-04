@@ -286,7 +286,7 @@ const doctorWallet = async (
 };
 
 const doctorMeets = (req: AuthRequest, res: Response) => {
-
+    
 };
 
 doctorDashboardRouter.get(
