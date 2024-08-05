@@ -1,7 +1,12 @@
-import Navbar from "@/components/Navbar";
 import { Search, Video, Heart, CreditCard } from "lucide-react";
 import React, { ReactNode, useMemo } from "react";
 import { Link } from "react-router-dom";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Home = () => {
     const features = useMemo(() => {
@@ -75,6 +80,7 @@ const Home = () => {
                     </div>
                 </section>
             </main>
+            <FAQs />
             <Footer />
         </div>
     );
@@ -104,6 +110,65 @@ const Feature: React.FC<IFeature> = ({ icon, title, description }) => {
             <h3 className="text-xl font-semibold mb-2">{title}</h3>
             <p>{description}</p>
         </div>
+    );
+};
+
+const FAQs = () => {
+    const faqs = [
+        {
+            question: "What is HealthHub?",
+            answer: "HealthHub is an online consultation platform that connects patients with doctors for virtual appointments with help of video calls",
+        },
+        {
+            question: "How do I book an online consultation?",
+            answer: "To book an online consultation, navigate to the 'Search' section, search for a doctor, and select a suitable date and time for your appointment.",
+        },
+        {
+            question: "What if I am confused on what I am looking for?",
+            answer: "Go go chat section of app. Chat with our AI Medibot in natural language to get your confusion clear."
+        },
+        {
+            question: "What is Medibot?",
+            answer: "Medibot is our fill tuned AI model for health tips and advices."
+        },
+        {
+            question: "Can I share my medical records with the doctor?",
+            answer: "Yes, you can upload and share your medical records with the doctor during the consultation for better diagnosis and treatment.",
+        },
+        {
+            question: "How do I join a scheduled consultation?",
+            answer: "You can join a scheduled consultation by logging into your account, navigating to the 'Meets' section, and clicking on the 'Join' button next to your scheduled consultation.",
+        },
+        {
+            question: "What payment methods are accepted?",
+            answer: "We accept various payment methods, including credit/debit cards, digital wallets, and online banking. You can choose your preferred payment method during the booking process.",
+        },
+    ];
+
+    return (
+        <>
+            <h1 className="text-2xl text-center font-bold m-3">Frequently Asked Questions</h1>
+            <div className="flex justify-center m-5 text-xl">
+                <Accordion type="single" collapsible className="w-3/4 mx-auto">
+                    {faqs.map((faq, index) => {
+                        return (
+                            <AccordionItem
+                                value={faq.question}
+                                key={index}
+                                className="border-b border-gray-200 m-4"
+                            >
+                                <AccordionTrigger className="px-4 py-2 rounded-t-md w-full text-left focus:outline-none">
+                                    {faq.question}
+                                </AccordionTrigger>
+                                <AccordionContent className="px-4 py-2 bg-white text-gray-600">
+                                    {faq.answer}
+                                </AccordionContent>
+                            </AccordionItem>
+                        );
+                    })}
+                </Accordion>
+            </div>
+        </>
     );
 };
 
