@@ -101,8 +101,33 @@ interface DoctorWalletResponse {
 }
 
 interface DoctorMeetResponse {
-    
+    success: boolean;
+    message: string;
+    appointment: {
+        id: number;
+        reason: string | null;
+        slot: {
+            startTime: Date;
+            endTime: Date;
+            duration: number;
+        };
+        patient: {
+            dateOfBirth: Date;
+            medicalHistory: string;
+            user: {
+                name: string;
+            };
+        };
+    } | null;
 }
+
+interface DoctorMeetRequest {
+    currentDate: Date;
+}
+
+const doctorMeetBodySchema = z.object({
+    currentDate: z.coerce.date(),
+});
 
 const doctorAppointment = async (
     req: AuthRequest,
@@ -241,8 +266,8 @@ const doctorEditProfile = async (
     res.status(200).json({
         success: true,
         message: "Profile updated successfully",
-        profile: doctor
-    })
+        profile: doctor,
+    });
 };
 
 const doctorWallet = async (
@@ -285,8 +310,70 @@ const doctorWallet = async (
     });
 };
 
-const doctorMeets = (req: AuthRequest, res: Response) => {
-    
+const doctorMeets = async (
+    req: AuthRequest<{}, {}, DoctorMeetRequest>,
+    res: Response<DoctorMeetResponse>
+) => {
+    const parsedBody = doctorMeetBodySchema.safeParse(req.body);
+    if (parsedBody.success === false) {
+        throwBadRequestError("currentDate not found");
+        return;
+    }
+    const doctorId = req.id;
+    if (!doctorId) {
+        throwUnauthorizedError("Please register as doctor fisrt");
+        return;
+    }
+    const { currentDate } = parsedBody.data;
+
+    const appointments = await db.appointment.findFirst({
+        where: {
+            doctorId: doctorId,
+            slot: {
+                startTime: {
+                    gte: currentDate,
+                },
+                endTime: {
+                    lte: currentDate,
+                },
+            },
+        },
+        select: {
+            id: true,
+            reason: true,
+            patient: {
+                select: {
+                    user: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                    dateOfBirth: true,
+                    medicalHistory: true,
+                },
+            },
+            slot: {
+                select: {
+                    startTime: true,
+                    endTime: true,
+                    duration: true,
+                },
+            },
+        },
+    });
+    if(!appointments) {
+        res.json({
+            success: true,
+            message: "No Appointments found for the given time",
+            appointment: null
+        });
+        return;
+    }
+    res.json({
+        success: true,
+        message: "meets fetched successfully",
+        appointment: appointments
+    });
 };
 
 doctorDashboardRouter.get(

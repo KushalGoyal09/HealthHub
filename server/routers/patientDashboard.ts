@@ -54,7 +54,78 @@ interface PatientAppointmentsResponse {
     }[];
 }
 
-const patientMeets = async (req: AuthRequest, res: Response) => {};
+interface PatientMeetResponse {
+    success: boolean;
+    message: string;
+    appointment: {
+        id: number,
+        reason: string | null;
+        slot: {
+            startTime: Date;
+            endTime: Date;
+            duration: number;
+        };
+    } | null;
+}
+ 
+interface PatientMeetRequest {
+    currentDate : Date
+}
+
+const patientMeetBodySchema = z.object({
+    currentDate: z.coerce.date()
+})
+
+const patientMeets = async (req: AuthRequest<PatientMeetRequest>, res: Response<PatientMeetResponse>) => {
+    const parsedData = patientMeetBodySchema.safeParse(req.body);
+    if(!parsedData.success) {
+        throwBadRequestError("currentDate not found");
+        return;
+    }
+    const {currentDate} = parsedData.data;
+    const patientId = req.id;
+    if (!patientId) {
+        throwUnauthorizedError("Please register as doctor fisrt");
+        return;
+    }
+    const appointments = await db.appointment.findFirst({
+        where: {
+            patientId: patientId,
+            slot: {
+                startTime: {
+                    gte: currentDate,
+                },
+                endTime: {
+                    lte: currentDate,
+                },
+            },
+        },
+        select: {
+            id: true,
+            reason: true,
+            slot: {
+                select: {
+                    startTime: true,
+                    endTime: true,
+                    duration: true,
+                },
+            },
+        },
+    });
+    if(!appointments) {
+        res.json({
+            success: true,
+            message: "No Appointments found for the given time",
+            appointment: null
+        });
+        return;
+    }
+    res.json({
+        success: true,
+        message: "meets fetched successfully",
+        appointment: appointments
+    });
+};
 
 const patientProfile = async (
     req: AuthRequest,
