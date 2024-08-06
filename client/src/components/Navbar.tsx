@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, redirect } from "react-router-dom";
 import Logo from "./Logo";
-import { useRecoilValueLoadable } from "recoil";
-import { userAtom } from "@/recoil/authAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { tokenAtom, userAtom } from "@/recoil/authAtom";
 import { Button } from "./ui/button";
+import { ChevronDownIcon, User } from "lucide-react";
 
 type Role = "ADMIN" | "DOCTOR" | "PATIENT" | "USER" | "NUll";
 
 const Navbar: React.FC = () => {
-    const userLoadable = useRecoilValueLoadable(userAtom);
-
+    const user = useRecoilValue(userAtom);
     const [role, setRole] = useState<Role>("NUll");
 
     useEffect(() => {
-        if (userLoadable.state === "hasValue") {
-            const user = userLoadable.contents;
-            if (user) {
-                setRole(user.role);
-            }
+        if (user) {
+            setRole(user.role);
+        } else {
+            setRole("NUll");
         }
-    }, [userLoadable]);
+    }, [user]);
 
     const navs = [
         {
@@ -94,19 +93,19 @@ const Navbar: React.FC = () => {
                             {buttons.map(
                                 (button) =>
                                     button.role.includes(role) && (
-                                        <Button
+                                        <Link
+                                            to={button.slug}
                                             key={button.name}
-                                            className="m-2"
                                         >
-                                            <Link to={button.slug}>
-                                                {" "}
-                                                {button.name}{" "}
-                                            </Link>
-                                        </Button>
+                                            <Button className="m-2">
+                                                {button.name}
+                                            </Button>
+                                        </Link>
                                     )
                             )}
                         </div>
                     </div>
+                    {role !== "NUll" && <ProfileMenu role={role} />}
                 </div>
             </div>
             <div className="md:hidden">
@@ -138,3 +137,93 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
+const ProfileMenu: React.FC<{ role: Role }> = ({ role }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const setToken = useSetRecoilState(tokenAtom);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        setToken(() => null);
+        toggleMenu();
+    };
+
+    const profile = [
+        {
+            name: "Profile",
+            role: ["PATIENT"],
+            slug: "/dashboard/profile",
+        },
+        {
+            name: "Profile",
+            role: ["DOCTOR"],
+            slug: "/dash/profile",
+        },
+        {
+            name: "Appointments",
+            role: ["PATIENT"],
+            slug: "/dashboard/appointments",
+        },
+        {
+            name: "Appointments",
+            role: ["DOCTOR"],
+            slug: "/dash/appointments",
+        },
+        {
+            name: "Meets",
+            role: ["PATIENT"],
+            slug: "/dashboard/meets",
+        },
+        {
+            name: "Meets",
+            role: ["DOCTOR"],
+            slug: "/dash/meets",
+        },
+        {
+            name: "Wallet",
+            role: ["DOCTOR"],
+            slug: "/dash/wallet",
+        },
+    ];
+
+    return (
+        <div className="relative">
+            <button
+                onClick={toggleMenu}
+                className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+            >
+                <span className="sr-only">Open user menu</span>
+                <User className="h-6 w-6" />
+                <ChevronDownIcon className="h-5 w-5 ml-2" />
+            </button>
+            {isOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    {profile.map(
+                        (navItem) =>
+                            navItem.role.includes(role) && (
+                                <NavLink
+                                    key={navItem.slug}
+                                    to={navItem.slug}
+                                    onClick={toggleMenu}
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                >
+                                    {navItem.name}
+                                </NavLink>
+                            )
+                    )}
+                    <NavLink
+                        to={"/"}
+                        className="block px-4 py-2 text-sm text-red-700 hover:bg-red-100"
+                        onClick={logout}
+                    >
+                        Logout
+                    </NavLink>
+                </div>
+            )}
+        </div>
+    );
+};

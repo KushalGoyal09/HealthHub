@@ -6,7 +6,9 @@ import Loading from "./Loading";
 const Layout = () => {
     return (
         <>
-            <Navbar />
+            <Suspense>
+                <Navbar />
+            </Suspense>
             <Suspense fallback={<Loading />}>
                 <Outlet />
             </Suspense>

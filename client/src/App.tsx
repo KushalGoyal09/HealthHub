@@ -21,9 +21,17 @@ import Faq from "./page/Faqs";
 import AboutDeveloper from "./page/kushalgoyal";
 import Meet from "./page/Meet";
 import Layout from "./components/Layout";
-import PatientAppointments, { patientAppointmentsLoader } from "./components/PatientAppointments";
-import PatietProfile, { patientProfileLoader } from "./components/PatientProfile";
+import PatientAppointments, {
+    patientAppointmentsLoader,
+} from "./components/PatientAppointments";
+import PatietProfile, {
+    patientProfileLoader,
+} from "./components/PatientProfile";
 import PatietMeets, { patientMeetsLoader } from "./components/PatientMeets";
+import About from "./page/About";
+import Contact from "./page/Contact";
+import Report from "./page/Report";
+import Suggest from "./page/Suggest";
 
 const App = () => {
     const router = createBrowserRouter([
@@ -65,6 +73,14 @@ const App = () => {
                     loader: doctorDetailLoader,
                 },
                 {
+                    path: "/chat",
+                    element: <Chat />,
+                },
+                {
+                    path: "/meet/:meetId",
+                    element: <Meet />,
+                },
+                {
                     path: "/dash",
                     element: <Dashboard />,
                     children: [
@@ -91,33 +107,40 @@ const App = () => {
                 },
                 {
                     path: "/dashboard",
-                    element: <Dashboard/>,
+                    element: <Dashboard />,
                     children: [
                         {
                             path: "profile",
-                            element: <PatietProfile/>,
-                            loader: patientProfileLoader
+                            element: <PatietProfile />,
+                            loader: patientProfileLoader,
                         },
                         {
                             path: "appointments",
-                            element: <PatientAppointments/>,
-                            loader: patientAppointmentsLoader
-
+                            element: <PatientAppointments />,
+                            loader: patientAppointmentsLoader,
                         },
                         {
                             path: "meets",
-                            element: <PatietMeets/>,
+                            element: <PatietMeets />,
                             // loader: patientMeeetsLoader
                         },
-                    ]
+                    ],
                 },
                 {
-                    path: "/chat",
-                    element: <Chat />,
+                    path: "/about",
+                    element: <About />,
                 },
                 {
-                    path: "/meet/:meetId",
-                    element: <Meet />,
+                    path: "/contact",
+                    element: <Contact />,
+                },
+                {
+                    path: "/report",
+                    element: <Report />,
+                },
+                {
+                    path: "suggest",
+                    element: <Suggest />,
                 },
                 {
                     path: "/faqs",
