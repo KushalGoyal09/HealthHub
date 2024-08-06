@@ -45,7 +45,7 @@ const AppointmentCard: React.FC<Appointment> = (appointment) => {
             </p>
             <p className="text-gray-600 mb-2">
                 <strong>Date of Birth:</strong>{" "}
-                {appointment.patient.dateOfBirth.toDateString()}
+                {new Date(appointment.patient.dateOfBirth).toDateString()}
             </p>
             <p className="text-gray-600 mb-2">
                 <strong>Medical History:</strong>{" "}
@@ -54,15 +54,15 @@ const AppointmentCard: React.FC<Appointment> = (appointment) => {
             <div className="mt-4">
                 <p className="text-gray-600">
                     <strong>Date:</strong>{" "}
-                    {appointment.slot.startTime.toDateString()}
+                    {new Date(appointment.slot.startTime).toDateString()}
                 </p>
                 <p className="text-gray-600">
                     <strong>Start Time:</strong>{" "}
-                    {appointment.slot.startTime.toLocaleTimeString()}
+                    {new Date(appointment.slot.startTime).toLocaleTimeString()}
                 </p>
                 <p className="text-gray-600">
                     <strong>End Time:</strong>{" "}
-                    {appointment.slot.endTime.toLocaleTimeString()}
+                    {new Date(appointment.slot.endTime).toLocaleTimeString()}
                 </p>
                 <p className="text-gray-600">
                     <strong>Duration:</strong> {appointment.slot.duration}{" "}
@@ -71,7 +71,7 @@ const AppointmentCard: React.FC<Appointment> = (appointment) => {
             </div>
             <p className="text-gray-600 mt-4">
                 <strong>Created At:</strong>{" "}
-                {appointment.createdAt.toDateString()}
+                {new Date(appointment.createdAt).toDateString()}
             </p>
         </div>
     );

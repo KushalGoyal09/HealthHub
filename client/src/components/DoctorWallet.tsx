@@ -25,7 +25,7 @@ const DoctorWallet: React.FC = () => {
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
-                Doctor Wallet
+                Wallet
             </h1>
             <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6 mb-8">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -55,7 +55,7 @@ const DoctorWallet: React.FC = () => {
                             {data.Order.map((order, index) => (
                                 <tr key={index}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {order.updatedAt.toDateString()}
+                                        {new Date(order.updatedAt).toDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         ${order.amount.toFixed(2)}
