@@ -53,6 +53,10 @@ const AppointmentCard: React.FC<Appointment> = (appointment) => {
             </p>
             <div className="mt-4">
                 <p className="text-gray-600">
+                    <strong>Date:</strong>{" "}
+                    {appointment.slot.startTime.toDateString()}
+                </p>
+                <p className="text-gray-600">
                     <strong>Start Time:</strong>{" "}
                     {appointment.slot.startTime.toLocaleTimeString()}
                 </p>

@@ -4,14 +4,14 @@ import { toast } from "./ui/use-toast";
 
 const PatientAppointments = () => {
     const appointments = useLoaderData() as Appointment[];
-    if(appointments === null) {
+    if (appointments === null) {
         return;
     }
     return (
         <>
             <div className="p-6 bg-gray-100 min-h-screen">
                 <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
-                    Doctor Appointments
+                    Appointments
                 </h1>
                 {appointments.length === 0 && (
                     <div className="text-center text-red-600 text-xl">
@@ -57,6 +57,10 @@ const AppointmentCard: React.FC<Appointment> = (appointment) => {
                 {appointment.reason || "No reason provided"}
             </p>
             <div className="mt-4">
+                <p className="text-gray-600">
+                    <strong>Date:</strong>{" "}
+                    {new Date(appointment.slot.startTime).toDateString()}
+                </p>
                 <p className="text-gray-600">
                     <strong>Start Time:</strong>{" "}
                     {new Date(appointment.slot.startTime).toLocaleTimeString()}

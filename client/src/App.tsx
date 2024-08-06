@@ -12,7 +12,7 @@ import Chat from "./page/Chat";
 import DoctorAppointment, {
     doctorAppointmentsLoader,
 } from "@/components/DoctorAppointments";
-import DoctorMeet from "@/components/DoctorMeet";
+import DoctorMeet, { doctorMeetLoader } from "@/components/DoctorMeet";
 import DoctorProfile, { doctorProfileLoader } from "@/components/DoctorProfile";
 import DoctorWallet, { doctorWalletLoader } from "@/components/DoctorWallet";
 import { RecoilRoot } from "recoil";
@@ -102,6 +102,7 @@ const App = () => {
                         {
                             path: "meets",
                             element: <DoctorMeet />,
+                            loader: doctorMeetLoader
                         },
                     ],
                 },
@@ -122,7 +123,7 @@ const App = () => {
                         {
                             path: "meets",
                             element: <PatietMeets />,
-                            // loader: patientMeeetsLoader
+                            loader: patientMeetsLoader
                         },
                     ],
                 },
