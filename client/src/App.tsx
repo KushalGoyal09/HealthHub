@@ -140,7 +140,7 @@ const App = () => {
                     element: <Report />,
                 },
                 {
-                    path: "suggest",
+                    path: "/suggest",
                     element: <Suggest />,
                 },
                 {

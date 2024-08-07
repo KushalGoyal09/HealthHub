@@ -1,112 +1,106 @@
+import Footer from "@/components/Footer";
+
 interface IFaq {
-    question: string,
-    answer: string
+    question: string;
+    answer: string;
 }
 
-const FAQ  = () => {
-
-    const faqs : IFaq[]= [
+const FAQ = () => {
+    const faqs: IFaq[] = [
         {
             question: "What is HealthHub?",
-            answer: "HealthHub is a comprehensive platform designed to streamline healthcare management. It provides features for patients to book appointments, access medical records, and communicate with healthcare providers"
-        }, 
+            answer: "HealthHub is a comprehensive platform designed to streamline healthcare management. It provides features for patients to book appointments, access medical records, and communicate with healthcare providers",
+        },
         {
             question: "Who can use HealthHub?",
-            answer:"HealthHub is intended for patients, healthcare providers. Patients can manage their health records and appointments, healthcare providers can manage their schedules and patient interactions."
-        }, 
+            answer: "HealthHub is intended for patients, healthcare providers. Patients can manage their health records and appointments, healthcare providers can manage their schedules and patient interactions.",
+        },
         {
-            question:"Is HealthHub secure?",
-            answer: "Yes, HealthHub is designed with security as a top priority. We use encryption, secure authentication, and other best practices to ensure that your data is safe."
+            question: "Is HealthHub secure?",
+            answer: "Yes, HealthHub is designed with security as a top priority. We use encryption, secure authentication, and other best practices to ensure that your data is safe.",
+        },
+        {
+            question: "How do I book a consultation?",
+            answer: "To book a consultation, sign up on HealthHub, browse through the available doctors, and select a convenient time slot for your appointment.",
+        },
+        {
+            question: "Is my personal information secure?",
+            answer: "Yes, we prioritize your privacy and security. All personal information is encrypted and securely stored, ensuring confidentiality and protection.",
+        },
+        {
+            question: "What services are available on HealthHub?",
+            answer: "HealthHub offers a range of services including general consultations, specialist consultations, follow-up appointments, and health advice.",
+        },
+        {
+            question: "How to access all the services provided by HealthHub?",
+            answer: "Signup using your email and then register as doctor or patient to access all the related services.",
+        },
+        {
+            question:
+                "Why there is no confirmation of email using OTPs or anything?",
+            answer: "The app is in test mode. We do not confirm your credentials so that you do not hesitate to use our app.",
+        },
+        {
+            question: "How do I book an online consultation?",
+            answer: "To book an online consultation, navigate to the 'Search' section, search for a doctor, and select a suitable date and time for your appointment.",
+        },
+        {
+            question: "What if I am confused on what I am looking for?",
+            answer: "Go go chat section of app. Chat with our AI Medibot in natural language to get your confusion clear.",
+        },
+        {
+            question: "What is Medibot?",
+            answer: "Medibot is our fill tuned AI model for health tips and advices.",
+        },
+        {
+            question: "Can I share my medical records with the doctor?",
+            answer: "Yes, you can upload and share your medical records with the doctor during the consultation for better diagnosis and treatment.",
+        },
+        {
+            question: "How do I join a scheduled consultation?",
+            answer: "You can join a scheduled consultation by logging into your account, navigating to the 'Meets' section, and clicking on the 'Join' button next to your scheduled consultation.",
+        },
+        {
+            question: "What payment methods are accepted?",
+            answer: "We accept various payment methods, including credit/debit cards, digital wallets, and online banking. You can choose your preferred payment method during the booking process.",
         },
     ];
 
-  return (
-      <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">HealthHub FAQ</h1>
-        
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">General Questions</h2>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">What is HealthHub?</h3>
-            <p className="text-gray-500">HealthHub is a comprehensive platform designed to streamline healthcare management. It provides features for patients to book appointments, access medical records, and communicate with healthcare providers.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">Who can use HealthHub?</h3>
-            <p className="text-gray-500">HealthHub is intended for patients, healthcare providers, and administrators. Patients can manage their health records and appointments, healthcare providers can manage their schedules and patient interactions, and administrators can oversee the entire system.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">Is HealthHub secure?</h3>
-            <p className="text-gray-500">Yes, HealthHub is designed with security as a top priority. We use encryption, secure authentication, and other best practices to ensure that your data is safe.</p>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Patient Questions</h2>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How do I sign up for HealthHub?</h3>
-            <p className="text-gray-500">To sign up, visit our website and click on the "Sign Up" button. You will need to provide some basic information and create a secure password.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How can I book an appointment?</h3>
-            <p className="text-gray-500">Once logged in, go to the "Appointments" section, select your healthcare provider, choose an available time slot, and confirm your booking.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How do I access my medical records?</h3>
-            <p className="text-gray-500">Your medical records can be accessed by navigating to the "Medical Records" section after logging into your HealthHub account.</p>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Healthcare Provider Questions</h2>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How do I register as a healthcare provider on HealthHub?</h3>
-            <p className="text-gray-500">Healthcare providers can register by visiting the "Provider Sign Up" section on our website. You will need to provide your professional details and verify your identity.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How can I manage my appointments?</h3>
-            <p className="text-gray-500">You can manage your appointments through the "Provider Dashboard," where you can view, reschedule, or cancel appointments.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">Can I communicate with my patients through HealthHub?</h3>
-            <p className="text-gray-500">Yes, HealthHub offers a secure messaging feature that allows healthcare providers to communicate directly with their patients.</p>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Technical Questions</h2>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">What technologies does HealthHub use?</h3>
-            <p className="text-gray-500">HealthHub is built using modern web technologies such as TypeScript, React, Node.js, Express.js, MongoDB, and AWS.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">Who can I contact for technical support?</h3>
-            <p className="text-gray-500">For technical support, you can reach out to our support team via the "Contact Us" page on our website or send an email to support@healthhub.com.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">Does HealthHub offer mobile app support?</h3>
-            <p className="text-gray-500">Yes, HealthHub is fully responsive and can be accessed via web browsers on both desktop and mobile devices. A dedicated mobile app is currently in development and will be available soon.</p>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Miscellaneous Questions</h2>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How do I provide feedback or suggestions?</h3>
-            <p className="text-gray-500">We value your feedback! You can provide feedback or suggestions through the "Feedback" section on our website or email us at feedback@healthhub.com.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">How can I stay updated with HealthHub news?</h3>
-            <p className="text-gray-500">You can stay updated by subscribing to our newsletter or following us on social media platforms.</p>
-          </div>
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2 text-gray-600">What if I forget my password?</h3>
-            <p className="text-gray-500">If you forget your password, you can use the "Forgot Password" feature on the login page to reset it. You will receive an email with instructions to create a new password.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    return (
+        <>
+            <div className="min-h-screen bg-gray-100 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-3xl w-full space-y-8">
+                    <div className="text-center">
+                        <h2 className="text-3xl font-extrabold text-gray-900">
+                            Frequently Asked Questions
+                        </h2>
+                        <p className="mt-4 text-lg text-gray-600">
+                            Find answers to some of the most common questions
+                            about HealthHub.
+                        </p>
+                    </div>
+                    <div className="space-y-6">
+                        {faqs.map((faq, index) => (
+                            <div
+                                key={index}
+                                className="bg-white shadow sm:rounded-lg"
+                            >
+                                <div className="px-4 py-5 sm:p-6">
+                                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                        {faq.question}
+                                    </h3>
+                                    <div className="mt-2 text-base text-gray-500">
+                                        {faq.answer}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <Footer />  
+        </>
+    );
 };
 
 export default FAQ;
