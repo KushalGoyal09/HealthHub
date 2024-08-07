@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo } from "react";
 import { userAtom } from "@/recoil/authAtom";
 import { NavLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -14,7 +14,6 @@ const DashboardSidebar: React.FC = () => {
     if (user === null) {
         return null;
     }
-    const [role, setRole] = useState(user.role);
     const sections = useMemo<ISection[]>(() => {
         return [
             {
@@ -45,7 +44,7 @@ const DashboardSidebar: React.FC = () => {
             <nav className="flex flex-col p-4">
                 {sections.map((section) => {
                     if (
-                        role === "DOCTOR" &&
+                        user.role === "DOCTOR" &&
                         (section.role === "Doctor" || section.role === "Both")
                     ) {
                         return (
@@ -64,7 +63,7 @@ const DashboardSidebar: React.FC = () => {
                         );
                     }
                     if (
-                        role === "PATIENT" &&
+                        user.role === "PATIENT" &&
                         (section.role === "Patient" || section.role === "Both")
                     ) {
                         return (

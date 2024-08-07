@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, redirect } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { tokenAtom, userAtom } from "@/recoil/authAtom";
