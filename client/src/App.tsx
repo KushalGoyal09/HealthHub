@@ -32,6 +32,7 @@ import About from "./page/About";
 import Contact from "./page/Contact";
 import Report from "./page/Report";
 import Suggest from "./page/Suggest";
+import Protected from "./components/Protected";
 
 const App = () => {
     const router = createBrowserRouter([
@@ -65,7 +66,11 @@ const App = () => {
                 },
                 {
                     path: "/search",
-                    element: <Search />,
+                    element: (
+                        <Protected allowedRole={["PATIENT"]}>
+                            <Search />
+                        </Protected>
+                    ),
                 },
                 {
                     path: "/doctor/:doctorId",
@@ -74,15 +79,27 @@ const App = () => {
                 },
                 {
                     path: "/chat",
-                    element: <Chat />,
+                    element: (
+                        <Protected allowedRole={["PATIENT"]}>
+                            <Chat />
+                        </Protected>
+                    ),
                 },
                 {
                     path: "/meet/:meetId",
-                    element: <Meet />,
+                    element: (
+                        <Protected allowedRole={["PATIENT", "DOCTOR"]}>
+                            <Meet />
+                        </Protected>
+                    ),
                 },
                 {
                     path: "/dash",
-                    element: <Dashboard />,
+                    element: (
+                        <Protected allowedRole={["DOCTOR"]}>
+                            <Dashboard />
+                        </Protected>
+                    ),
                     children: [
                         {
                             path: "wallet",
@@ -102,13 +119,17 @@ const App = () => {
                         {
                             path: "meets",
                             element: <DoctorMeet />,
-                            loader: doctorMeetLoader
+                            loader: doctorMeetLoader,
                         },
                     ],
                 },
                 {
                     path: "/dashboard",
-                    element: <Dashboard />,
+                    element: (
+                        <Protected allowedRole={["PATIENT"]}>
+                            <Dashboard />
+                        </Protected>
+                    ),
                     children: [
                         {
                             path: "profile",
@@ -123,7 +144,7 @@ const App = () => {
                         {
                             path: "meets",
                             element: <PatietMeets />,
-                            loader: patientMeetsLoader
+                            loader: patientMeetsLoader,
                         },
                     ],
                 },

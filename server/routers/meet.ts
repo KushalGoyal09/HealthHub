@@ -108,6 +108,6 @@ const handleMeet = async (
     });
 };
 
-meetRouter.get("/:meetId", authMiddleware, handleMeet);
+meetRouter.post("/:meetId", authMiddleware, handleMeet);
 
 export default meetRouter;

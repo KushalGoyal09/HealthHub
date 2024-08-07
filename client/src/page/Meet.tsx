@@ -1,36 +1,73 @@
-import { redirect, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { userAtom } from "@/recoil/authAtom";
+import { tokenAtom, userAtom } from "@/recoil/authAtom";
 import { toast } from "@/components/ui/use-toast";
+import NotFound from "./NotFound";
+import axios, { AxiosResponse } from "axios";
+import Loading from "@/components/Loading";
+
+interface MeetResponse {
+    success: boolean;
+    valid: boolean;
+}
+
+interface MeetReq {
+    currentDate: Date;
+}
 
 const Meet = () => {
     const { meetId } = useParams();
+    const token = useRecoilValue(tokenAtom);
     const user = useRecoilValue(userAtom);
+    const navigate = useNavigate();
+    const [isValid, setIsValid] = useState<null | boolean>(null);
+    if (!meetId) {
+        return <NotFound />;
+    }
+    const isMeetValid = async (meetId: string) => {
+        try {
+            const { data } = await axios.post<
+                MeetResponse,
+                AxiosResponse<MeetResponse>,
+                MeetReq
+            >(
+                `/api/meet/${meetId}`,
+                {
+                    currentDate: new Date(),
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (data.valid === false) {
+                navigate("/");
+                toast({
+                    title: "You are not authorized to access the meeting",
+                    variant: "destructive",
+                });
+                setIsValid(false);
+            } else {
+                setIsValid(true);
+            }
+        } catch (error) {
+            navigate("/");
+            toast({
+                title: "No Meeting found as such",
+                variant: "destructive",
+            });
+        }
+    };
 
     useEffect(() => {
-        if (!user) {
-            toast({
-                title: "You need to login first",
-            });
-            redirect("/");
-            return;
-        }
-        if (user.role !== "DOCTOR" && user.role !== "PATIENT") {
-            toast({
-                title: "You need to register as Doctor or Patient",
-            });
-            redirect("/");
-            return;
-        }
-    },[]);
+        isMeetValid(meetId);
+    }, []);
 
     const myMeeting = async (element: HTMLDivElement) => {
         if (!user || !meetId) {
-            return;
-        }
-        if (user.role !== "DOCTOR" && user.role !== "PATIENT") {
             return;
         }
         const appID = import.meta.env.VITE_ZEGO_APP_ID;
@@ -61,10 +98,13 @@ const Meet = () => {
 
     return (
         <>
-            <div
-                ref={myMeeting}
-                style={{ width: "100vw", height: "100vh" }}
-            ></div>
+            {isValid === null && <Loading />}
+            {isValid === true && (
+                <div
+                    ref={myMeeting}
+                    style={{ width: "100vw", height: "100vh" }}
+                ></div>
+            )}
         </>
     );
 };
