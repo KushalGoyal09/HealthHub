@@ -63,7 +63,7 @@ const About = () => {
                             </h3>
                             <div className="mt-2 text-base text-gray-500">
                                 <p>
-                                    Proudly Openscourse, you are welcome for
+                                    Proudly opensource, you are welcome for
                                     contibutions.
                                 </p>
 

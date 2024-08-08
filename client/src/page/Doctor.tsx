@@ -246,7 +246,7 @@ const Doctor = () => {
     }, [bookingDate]);
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg m-5">
             <div className="flex items-center mb-6">
                 <img
                     src="/doctor.png"
@@ -267,7 +267,7 @@ const Doctor = () => {
                         <strong>Experience:</strong> {doctor.experience} years
                     </p>
                     <p className="text-gray-700">
-                        <strong>Fees:</strong> ${doctor.fees}
+                        <strong>Fees:</strong> ₹{doctor.fees}
                     </p>
                     <p className="text-gray-700">
                         <strong>Timing:</strong>{" "}

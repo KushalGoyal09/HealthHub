@@ -44,7 +44,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
                     <strong>Specialty:</strong> {doctor.specialty}
                 </p>
                 <p className="text-gray-800 mb-3">
-                    <strong>Fees:</strong> ${doctor.fees}
+                    <strong>Fees:</strong> ₹{doctor.fees}
                 </p>
                 <p className="text-gray-800 mb-3">
                     <strong>Experience:</strong> {doctor.experience} years

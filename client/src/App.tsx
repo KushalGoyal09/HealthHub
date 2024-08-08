@@ -66,11 +66,7 @@ const App = () => {
                 },
                 {
                     path: "/search",
-                    element: (
-                        <Protected allowedRole={["PATIENT"]}>
-                            <Search />
-                        </Protected>
-                    ),
+                    element: <Search />,
                 },
                 {
                     path: "/doctor/:doctorId",
