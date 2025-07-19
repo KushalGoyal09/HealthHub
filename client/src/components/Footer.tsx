@@ -1,67 +1,7 @@
-import { useMemo } from "react";
+import links from "@/constant/links";
 import { Link } from "react-router-dom";
 
-interface Ilinks {
-    about: {
-        name: string;
-        slug: string;
-    }[];
-    services: {
-        name: string;
-        slug: string;
-    }[];
-}
-
 const Footer: React.FC = () => {
-    const links = useMemo<Ilinks>(() => {
-        return {
-            about: [
-                {
-                    name: "About Us",
-                    slug: "/about",
-                },
-                {
-                    name: "Contact",
-                    slug: "/contact",
-                },
-                {
-                    name: "About the Developer",
-                    slug: "/kushalgoyal",
-                },
-                {
-                    name: "FAQs",
-                    slug: "/faqs",
-                },
-            ],
-            services: [
-                {
-                    name: "login",
-                    slug: "/login",
-                },
-                {
-                    name: "signup",
-                    slug: "/signup",
-                },
-                {
-                    name: "Medibot",
-                    slug: "/chat",
-                },
-                {
-                    name: "Register as Patient",
-                    slug: "register-patient",
-                },
-                {
-                    name: "Register as Doctor",
-                    slug: "register-doctor",
-                },
-                {
-                    name: "Search Doctor",
-                    slug: "/search",
-                },
-            ],
-        };
-    }, []);
-
     return (
         <footer className="bg-gray-800 text-white py-10">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -106,7 +46,7 @@ const Footer: React.FC = () => {
                     <ul>
                         <li className="mb-2">
                             <a
-                                href="https://github.com/KushalGoyal09/HealthHub"
+                                href={links.other.code}
                                 className="hover:underline"
                                 target="_blank"
                             >
@@ -130,7 +70,7 @@ const Footer: React.FC = () => {
                 <p>
                     Made with ❤️ by{" "}
                     <a
-                        href="https://kushalgoyal.tech"
+                        href={links.other.portfolio}
                         className="text-blue-400 hover:underline"
                         target="_blank"
                     >

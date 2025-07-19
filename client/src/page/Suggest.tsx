@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import links from "@/constant/links";
 
 const Suggestions = () => {
     return (
@@ -20,10 +21,10 @@ const Suggestions = () => {
                         </p>
                         <p className="mt-2 text-lg text-indigo-600">
                             <a
-                                href="mailto:tech.kushalgoyal@gmail.com"
+                                href={`mailto:${links.other.email}`}
                                 className="text-indigo-600 hover:text-indigo-900"
                             >
-                                tech.kushalgoyal@gmail.com
+                                {links.other.email}
                             </a>
                         </p>
                         <p className="mt-4 text-lg text-gray-600">

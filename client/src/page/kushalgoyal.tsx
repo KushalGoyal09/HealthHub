@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import links from "@/constant/links";
 
 const AboutDeveloper = () => {
     return (
@@ -34,7 +35,7 @@ const AboutDeveloper = () => {
                                     innovative solutions.
                                 </p>
                                 <a
-                                    href="https://kushalgoyal.tech"
+                                    href={links.other.portfolio}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-indigo-600 hover:text-indigo-900"

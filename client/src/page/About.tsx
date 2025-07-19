@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import links from "@/constant/links";
 
 const About = () => {
     return (
@@ -68,7 +69,7 @@ const About = () => {
                                 </p>
 
                                 <a
-                                    href="https://kushalgoyal.tech"
+                                    href={links.other.portfolio}
                                     className="text-blue-500"
                                     target="_blank"
                                     rel="noopener noreferrer"
