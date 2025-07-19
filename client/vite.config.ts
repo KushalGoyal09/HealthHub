@@ -8,7 +8,7 @@ export default defineConfig({
     plugins: _plugins,
     server: {
         proxy: {
-            "/api": "https://backend-healthhub.kushalgoyal.tech",
+            "/api": "http://localhost:3000",
         },
     },
     resolve: {

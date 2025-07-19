@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import calculateFreeSlots from "../utils/calculateFreeSlots";
 import {
     throwBadRequestError,
-    throwForbiddenError,
     throwNotFoundError,
 } from "../customError/customError";
 import authMiddleware from "../middleware/auth";

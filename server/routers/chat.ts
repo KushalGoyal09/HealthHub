@@ -1,69 +1,110 @@
-import { Response, Router } from "express";
-import OpenAI from "openai";
-import authMiddleware, { AuthRequest } from "../middleware/auth";
+import express, { Router, Request, Response, NextFunction } from "express";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { throwInternalServerError } from "../customError/customError";
+import authMiddleware from "../middleware/auth";
 import patientAuthMiddleware from "../middleware/patientAuth";
-import { z } from "zod";
-import { throwBadRequestError } from "../customError/customError";
-const openai = new OpenAI();
-const chatRouter = Router();
+import SYSTEM_PROMPT from "../constant/SYSTEM_PROMPT";
+import { z } from 'zod';
 
-interface message {
-    role: "system" | "user" | "assistant";
-    content: string;
-}
+const MODEL = 'gemini-2.5-flash';
 
-const bodySchema = z.object({
-    messages: z.array(
-        z.object({
-            role: z.enum(["user", "assistant"]),
-            content: z.string(),
-        })
-    ),
-});
-
-interface ReqBody {
-    messages: message[];
-}
-
-interface ResBody {
-    message: string;
-    success: boolean;
-}
-
-const chat = async (
-    req: AuthRequest<{}, {}, ReqBody>,
-    res: Response<ResBody>
-) => {
-    const parsedData = bodySchema.safeParse(req.body);
-    if (parsedData.error) {
-        throwBadRequestError("Wrong input");
-        return;
-    }
-    const { messages } = parsedData.data;
-    const completion = await openai.chat.completions.create({
-        messages: [
-            {
-                role: "system",
-                content:
-                    "you are mediBot, a bot that can understands the patients pain points and medical problems that they are facing. Talk to them like a adviser and suggest them what they should do and what type of doctors they should visit. and also the high level doubts they may have. Do not get to technical with them. the next prompts will be a patients conversation only. talk to them like that only. keep your answers short and easy to understand.",
-            },
-            ...messages,
-        ],
-        model: "gpt-3.5-turbo-0125",
-    });
-    if (completion.choices[0].message.content === null) {
-        res.json({
-            message: "Sorry our bot is not able to answer this",
-            success: false,
-        });
-        return;
-    }
-    res.json({
-        message: completion.choices[0].message.content,
-        success: true,
-    });
+const CONFIG = {
+    maxOutputTokens: 1000,
+    temperature: 0.7,
+    topP: 0.9,
+    topK: 40,
 };
 
-chatRouter.post("/", authMiddleware, patientAuthMiddleware, chat);
+interface ChatMessage {
+    role: string;
+    parts: { text: string }[];
+}
 
-export default chatRouter;
+const router: Router = express.Router();
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
+const systemInstruction = {
+    role: "system",
+    parts: [{ text: SYSTEM_PROMPT }],
+};
+
+const chatMessageSchema = z.object({
+    role: z.string(),
+    parts: z.array(z.object({
+        text: z.string()
+    }))
+});
+
+const chatHistorySchema = z.object({
+    history: z.array(chatMessageSchema).min(1)
+});
+
+const validateChatHistory = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const result = chatHistorySchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({
+            error: "Invalid chat history format"
+        });
+    }
+    next();
+};
+
+router.post(
+    "/",
+    authMiddleware,
+    patientAuthMiddleware,
+    validateChatHistory,
+    async (req: Request, res: Response) => {
+        try {
+            const { history } = req.body as { history: ChatMessage[] };
+
+            const model = genAI.getGenerativeModel({
+                model: MODEL,
+                systemInstruction: systemInstruction,
+            });
+
+            const chat = model.startChat({
+                history: history,
+                generationConfig: CONFIG,
+            });
+
+            const lastUserMessage = history[history.length - 1].parts[0].text;
+
+            const result = await chat.sendMessageStream(lastUserMessage);
+
+            res.setHeader("Content-Type", "text/plain");
+            res.setHeader("Transfer-Encoding", "chunked");
+
+            try {
+                for await (const chunk of result.stream) {
+                    const chunkText = chunk.text();
+                    if (!res.writableEnded) {
+                        res.write(chunkText);
+                    }
+                }
+                res.end();
+            } catch (streamError) {
+                console.error("Error in stream processing:", streamError);
+                if (!res.writableEnded) {
+                    res.status(500).json({
+                        error: "Stream processing failed",
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error in chat streaming:", error);
+            if (!res.writableEnded) {
+                throwInternalServerError(
+                    "An error occurred while processing your request."
+                );
+            }
+        }
+    }
+);
+
+export default router;
