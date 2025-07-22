@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "bun ./dist/app.js",
+    "start": "npm run build && node ./dist/app.js",
     "dev": "bun --watch app.ts",
-    "migrate": "bunx prisma migrate dev"
+    "migrate": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
@@ -25,10 +25,11 @@
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.53.2",
     "razorpay": "^2.9.4",
-    "zod": "^3.23.8"
+    "typescript": "^5.8.3",
+    "zod": "^3.23.8",
+    "@types/bcrypt": "^5.0.2"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "nodemon": "^3.1.1",
     "prisma": "5.14.0"
   }
